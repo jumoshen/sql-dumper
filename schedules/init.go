@@ -30,8 +30,9 @@ func (c *Schedules) Run() {
 	cr := cron.New()
 
 	for _, schedule := range c.Data {
-		_, err := cr.AddFunc(schedule.Spec, func() {
-			_, err := callCommands(c, schedule.Func)
+		tmp := schedule
+		_, err := cr.AddFunc(tmp.Spec, func() {
+			_, err := callCommands(c, tmp.Func)
 			if err != nil {
 				c.Logger.Errorf("crontab err:%#v", err)
 			}
