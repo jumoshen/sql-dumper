@@ -57,7 +57,7 @@ func (c *Schedules) MyDump() {
 }
 
 func stdReader(reader io.ReadCloser) (string, error) {
-	bucket := make([]byte, 0)
+	bucket := make([]byte, 0, 1024)
 	buffer := make([]byte, 100)
 	for {
 		num, err := reader.Read(buffer)
