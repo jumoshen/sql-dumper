@@ -3,9 +3,11 @@ package schedules
 import (
 	"fmt"
 	"reflect"
+	"time"
 
 	"dumper/config"
 	"dumper/svc"
+	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
 )
 
@@ -25,29 +27,29 @@ func NewSchedules(svcCtx *svc.ServiceContext) *Schedules {
 }
 
 func (c *Schedules) Run() {
-	//cr := cron.New()
+	cr := cron.New()
 
 	for _, schedule := range c.Data {
-		//_, err := cr.AddFunc(schedule.Spec, func() {
+		_, err := cr.AddFunc(schedule.Spec, func() {
 			_, err := callCommands(c, schedule.Func)
 			if err != nil {
 				c.Logger.Errorf("crontab err:%#v", err)
 			}
-		//})
-		//if err != nil {
-		//	c.Logger.Errorf("crontab err:%#v", err)
-		//}
+		})
+		if err != nil {
+			c.Logger.Errorf("crontab err:%#v", err)
+		}
 	}
-	//
-	//cr.Start()
-	//
-	//t := time.NewTimer(time.Second * 10)
-	//for {
-	//	select {
-	//	case <-t.C:
-	//		t.Reset(time.Second * 10)
-	//	}
-	//}
+
+	cr.Start()
+
+	t := time.NewTimer(time.Second * 10)
+	for {
+		select {
+		case <-t.C:
+			t.Reset(time.Second * 10)
+		}
+	}
 }
 
 func callCommands(sc *Schedules, functionName string, params ...interface{}) (ret []reflect.Value, err error) {
