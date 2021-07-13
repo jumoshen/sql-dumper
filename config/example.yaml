@@ -1,0 +1,25 @@
+name: sql-dumper
+mode: dev
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: root
+  db_name: admin
+  dump_path: /usr/bin/mysqldump
+
+# 接口频率限制 1秒25次
+throttle:
+  key_prefix: "dumper:throttle:"
+  seconds: 1
+  quota: 25
+
+log:
+  file: ./dumper.log
+
+mail:
+  user: "1111@qq.com"
+  password: ""
+  host: "smtp.qq.com"
+  port: 465
