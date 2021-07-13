@@ -1,6 +1,7 @@
 package schedules
 
 import (
+	"fmt"
 	"io"
 	"os/exec"
 	"strings"
@@ -14,12 +15,12 @@ func (c *Schedules) MyDump() {
 		"./schedules/commands/export-blog.sh",
 		c.svcCtx.Config.Mysql.DumpPath,
 		c.svcCtx.Config.Mysql.User,
-		string(rune(c.svcCtx.Config.Mysql.Port)),
+		fmt.Sprintf("%d", c.svcCtx.Config.Mysql.Port),
 		c.svcCtx.Config.Mysql.Host,
 		c.svcCtx.Config.Mysql.Password,
 		c.svcCtx.Config.Mysql.DbName,
 		now)
-
+	
 	stdout, _ := cmd.StdoutPipe()
 	stderr, _ := cmd.StderrPipe()
 

@@ -15,7 +15,7 @@ func (c *Schedules) SendMail(name string, rename string, errorOutput string, res
 	}
 
 	date := time.Now().Format("2006-01-02 15:04:05")
-	body := date + ` database backup,error:` + errorOutput + `,result:` + result
+	body := date + ` database backup <br>error:` + errorOutput + `<br>result:` + result
 
 	err := sender.Send(&utils.Message{
 		From:        "2261818969@qq.com",
