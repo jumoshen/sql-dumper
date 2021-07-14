@@ -31,5 +31,5 @@ func main() {
 	ctx := svc.NewServiceContext(c, cronConfig)
 
 	sc := schedules.NewSchedules(ctx)
-	sc.Run()
+	sc.Exec()
 }

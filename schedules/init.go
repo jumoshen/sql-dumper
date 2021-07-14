@@ -26,7 +26,7 @@ func NewSchedules(svcCtx *svc.ServiceContext) *Schedules {
 	}
 }
 
-func (c *Schedules) Run() {
+func (c *Schedules) Exec() {
 	cr := cron.New()
 
 	for _, schedule := range c.Data {
