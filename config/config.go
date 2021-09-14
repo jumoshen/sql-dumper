@@ -11,6 +11,8 @@ import (
 type (
 	Config struct {
 		Name     string   `yaml:"name"`
+		Host     string   `yaml:"host"`
+		Port     string   `yaml:"port"`
 		Mode     string   `json:",default=pro,options=dev|test|rt|pre|pro" yaml:"mode"`
 		Log      Log      `yaml:"log"`
 		Mysql    Mysql    `yaml:"mysql"`
@@ -25,6 +27,14 @@ type (
 		Password string `yaml:"password"`
 		DbName   string `yaml:"db_name"`
 		DumpPath string `yaml:"dump_path"`
+
+		Prefix                 string `json:",default="`
+		SingularTable          bool   `json:",default=false"`
+		SetConnMaxLifetime     int    `json:",default=1000"`
+		SetConnMaxIdleTime     int    `json:",default=1000"`
+		SetMaxOpenConn         int    `json:",default=100"`
+		SetMaxIdleConn         int    `json:",default=200"`
+		SkipDefaultTransaction bool   `json:",default=true"`
 	}
 
 	Log struct {

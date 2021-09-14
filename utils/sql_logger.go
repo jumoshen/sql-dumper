@@ -147,3 +147,4 @@ func (nopLogger) Print(values ...interface{}) {}
 func NewLogger() Logger {
 	return Logger{}
 }
+
