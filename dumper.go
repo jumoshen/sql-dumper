@@ -44,7 +44,7 @@ func main() {
 	}()
 
 	go func() {
-		http.HandleFunc("/", handler.SaveVisitLog(ctx))
+		http.Handle("/", &handler.Pxy{})
 
 		err := http.ListenAndServe(fmt.Sprintf(":%s", c.Port), nil)
 		if err != nil {

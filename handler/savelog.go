@@ -18,26 +18,22 @@ func SaveVisitLog(ctx *svc.ServiceContext) http.HandlerFunc {
 		//todo 使用百度地图获取位置信息
 		fmt.Println(r.RequestURI)
 		fmt.Printf("header:%#v\n", r.Header)
-
-		//todo https://api.map.baidu.com/location/ip?ak=vaXwBb4abtGvukEOOLA19Qltx3Ndua4c&ip=39.155.169.2&coor=bd09ll
-		_, err := model.ManagerDao.SaveVisitLog(r.Context(), &model.VisitLogs{
-			Url:         "https://www.baidu.com",
-			Ip:          utils.ClientIP(r),
-			Address:     "beijing",
-			Point:       "sss",
-			CreatedTime: time.Now(),
-		})
-
-		if err != nil {
-			utils.OkJson(w, err)
-		} else {
-			_ = proxy(w, r)
-		}
 	}
 }
 
-func proxy(rw http.ResponseWriter, req *http.Request) error {
+type Pxy struct {}
+
+func (p *Pxy)ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	fmt.Printf("Received request %s %s %s\n", req.Method, req.Host, req.RemoteAddr)
+
+	//todo https://api.map.baidu.com/location/ip?ak=vaXwBb4abtGvukEOOLA19Qltx3Ndua4c&ip=39.155.169.2&coor=bd09ll
+	_, err := model.ManagerDao.SaveVisitLog(req.Context(), &model.VisitLogs{
+		Url:         "https://www.baidu.com",
+		Ip:          utils.ClientIP(req),
+		Address:     "beijing",
+		Point:       "sss",
+		CreatedTime: time.Now(),
+	})
 
 	transport := http.DefaultTransport
 
@@ -55,7 +51,7 @@ func proxy(rw http.ResponseWriter, req *http.Request) error {
 	res, err := transport.RoundTrip(outReq)
 	if err != nil {
 		rw.WriteHeader(http.StatusBadGateway)
-		return err
+		return
 	}
 
 	for key, value := range res.Header {
@@ -65,13 +61,7 @@ func proxy(rw http.ResponseWriter, req *http.Request) error {
 	}
 
 	rw.WriteHeader(res.StatusCode)
-	_, err = io.Copy(rw, res.Body)
-	if err != nil {
-		return err
-	}
+	io.Copy(rw, res.Body)
 
-	err = res.Body.Close()
-	if err != nil {
-		return err
-	}
+	res.Body.Close()
 }
