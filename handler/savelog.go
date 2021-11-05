@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"net/url"
 
 	model "dumper/dao"
 	"dumper/svc"
@@ -38,6 +39,10 @@ func (p *Pxy)ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	transport := http.DefaultTransport
 
 	outReq := new(http.Request)
+outReq.URL = &url.URL{
+		Host: "https:www.jumoshen.cn",
+		Path: req.RequestURI,
+	}
 	// this only does shallow copies of maps
 	*outReq = *req
 

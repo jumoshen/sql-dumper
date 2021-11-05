@@ -3,14 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"dumper/config"
-	"dumper/handler"
-	schedules "dumper/schedules"
+	"dumper/schedules"
 	"dumper/svc"
 )
 
@@ -38,21 +36,21 @@ func main() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 
-	go func() {
-		sc := schedules.NewSchedules(ctx)
-		sc.Exec()
-	}()
+	//go func() {
+	sc := schedules.NewSchedules(ctx)
+	sc.Exec()
+	//}()
 
-	go func() {
-		http.Handle("/", &handler.Pxy{})
-
-		err := http.ListenAndServe(fmt.Sprintf(":%s", c.Port), nil)
-		if err != nil {
-			fmt.Printf("Starting server at %s:%s...\n", c.Host, c.Port)
-			return
-		}
-		fmt.Printf("Starting server at %s:%s...\n", c.Host, c.Port)
-	}()
+	//go func() {
+	//	http.Handle("/", &handler.Pxy{})
+	//
+	//	err := http.ListenAndServe(fmt.Sprintf(":%s", c.Port), nil)
+	//	if err != nil {
+	//		fmt.Printf("Starting server at %s:%s...\n", c.Host, c.Port)
+	//		return
+	//	}
+	//	fmt.Printf("Starting server at %s:%s...\n", c.Host, c.Port)
+	//}()
 
 	for {
 		switch <-signalChan {
@@ -61,3 +59,4 @@ func main() {
 		}
 	}
 }
+
